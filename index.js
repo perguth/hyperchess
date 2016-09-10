@@ -1,21 +1,24 @@
-const choo = require('choo')
-const app = choo()
+var choo = require('choo')
+var app = choo()
 
-const model = {
-  state: {
-  },
-  reducers: require('./reducers'),
-  subscriptions: require('./subscriptions')({}, hyperlog),
-  effects: require('./effects')
+var reducers = require('./reducers')
+var subscriptions = require('./subscriptions')
+var effects = require('./effects')
+var state = {}
+var router = require('./router')
+
+app.model({state, reducers, subscriptions, effects})
+app.router(router)
+
+var cooTree = app.start()
+var ChooChooProto = Object.create(HTMLElement.prototype)
+
+ChooChooProto.createdCallback = function () {
+  var shadow = this.createShadowRoot()
+  shadow.appendChild(cooTree)
 }
 
-app.model(model)
+var ChooChoo = document.registerElement('choo-choo', {prototype: ChooChooProto})
+var chooChooNode = new ChooChoo()
 
-const streamView = require('./view.js')
-
-app.router((route) => [
-  route('/', streamView)
-])
-
-const tree = app.start()
-document.body.appendChild(tree)
+document.body.appendChild(chooChooNode)
