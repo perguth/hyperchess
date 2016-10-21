@@ -1,24 +1,18 @@
 var choo = require('choo')
 var app = choo()
 
-var reducers = require('./reducers')
-var subscriptions = require('./subscriptions')
-var effects = require('./effects')
-var state = {}
-var router = require('./router')
+var effects = require('./choo/effects')
+var reducers = require('./choo/reducers')
+var router = require('./choo/router')
+var state = {
+  board: require('./board.json'),
+  rows: [8, 7, 6, 5, 4, 3, 2, 1],
+  cols: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+}
+var subscriptions = require('./choo/subscriptions')(state)
 
 app.model({state, reducers, subscriptions, effects})
 app.router(router)
 
 var cooTree = app.start()
-var ChooChooProto = Object.create(HTMLElement.prototype)
-
-ChooChooProto.createdCallback = function () {
-  var shadow = this.createShadowRoot()
-  shadow.appendChild(cooTree)
-}
-
-var ChooChoo = document.registerElement('choo-choo', {prototype: ChooChooProto})
-var chooChooNode = new ChooChoo()
-
-document.body.appendChild(chooChooNode)
+document.body.appendChild(cooTree)
