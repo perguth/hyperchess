@@ -1,6 +1,4 @@
 var html = require('choo/html')
-var rows = [8, 7, 6, 5, 4, 3, 2, 1]
-var cols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 var sf = require('sheetify')
 sf('../node_modules/normalize.css/normalize.css', {global: true})
 
@@ -47,20 +45,33 @@ var colStyle = sf`
   li.highlighted {
     background-color: yellow;
   }
+  li.highlighted.dark {
+    background-color: orange;
+  }
 `
+
+function movePiece (event) {
+  console.log(event)
+}
+window.movePiece = movePiece
 
 function renderFiles (rank, state) {
   return state.files.map((file, i) => {
     let genLi = elem => html`<li
-      class="${(i + (rank % 2 === 0 ? 1 : 0)) % 2 === 0
-        ? 'dark'
-        : ''}">
+      data-position=${file}${rank}
+      class="${(i + (rank % 2 === 0 ? 1 : 0)) % 2 === 0 ? 'dark' : ''}">
       ${elem}
     </li>`
-    if (!state.board[file][rank]) return genLi()
 
-    let type = state.board[file][rank].type
-    let color = state.board[file][rank].color
+    let square = state.gameState.board.squares.find(elem => {
+      return elem.file === file && elem.rank === rank
+    })
+    let piece = square.piece
+    if (!piece) return genLi()
+
+    let type = piece.type
+    let color = piece.side.name
+
     return html`${genLi(html`<img
       data-position=${file}${rank}
       data-type=${type}
