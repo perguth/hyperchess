@@ -14,6 +14,7 @@ var boardStyle = sf`
   }
 
   img.dragging {
+    cursor: grabbing;
     cursor: -webkit-grabbing;
   }
 `
@@ -37,29 +38,31 @@ var colStyle = sf`
   }
   li img {
     cursor: pointer;
+    cursor: grab;
     cursor: -webkit-grab;
   }
-`
-var darkFieldStyle = sf`
-  :host {
-    background-color: #cf8b4d !important;
+  li.dark {
+    background-color: #cf8b4d;
+  }
+  li.highlighted {
+    background-color: yellow;
   }
 `
 
-function renderCols (row, state) {
-  return cols.map((col, i) => {
+function renderFiles (rank, state) {
+  return state.files.map((file, i) => {
     let genLi = elem => html`<li
-      class="${(i + (row % 2 === 0 ? 1 : 0)) % 2 === 0
-        ? darkFieldStyle
+      class="${(i + (rank % 2 === 0 ? 1 : 0)) % 2 === 0
+        ? 'dark'
         : ''}">
       ${elem}
     </li>`
-    if (!state.board[row][col]) return genLi()
+    if (!state.board[file][rank]) return genLi()
 
-    let type = state.board[row][col].type
-    let color = state.board[row][col].color
+    let type = state.board[file][rank].type
+    let color = state.board[file][rank].color
     return html`${genLi(html`<img
-      data-position=${col}-${row}
+      data-position=${file}${rank}
       data-type=${type}
       data-color=${color}
       src=pieces/${type}-${color}.svg
@@ -70,10 +73,10 @@ function renderCols (row, state) {
 module.exports = (state, prev, send) => html`
   <section class=${boardStyle}>
     <ol reversed class=${rowStyle}>
-      ${rows.map(row => html`
+      ${state.ranks.reverse().map(rank => html`
         <li>
           <ol class=${colStyle}>
-            ${renderCols(row, state)}
+            ${renderFiles(rank, state)}
           </ol>
         </li>
       `)}

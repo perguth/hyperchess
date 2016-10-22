@@ -10,9 +10,6 @@ module.exports = state => [
         elem.style.top = previousPosition.top
         elem.style.left = previousPosition.left
       }
-      function getPosition (elem) {
-
-      }
 
       let options = {
         grid: 45,
@@ -20,22 +17,22 @@ module.exports = state => [
         useGPU: true,
         onDragStart: (elem, x, y, event) => {
           keepPreviousPosition(elem)
-          // send('highlightPossibleMoves', getPosition(elem), err => err && send(err))
           let classes = elem.className + ' ' || ''
           elem.className = classes + 'dragging'
         },
         onDragEnd: (elem, x, y, event) => {
           let classes = elem.className
           elem.className = classes.replace('dragging', '')
-          returnToPreviousPosition(elem)
+          // returnToPreviousPosition(elem)
         },
-        filterTarget: target => {
-          return true
+        filterTarget: elem => {
+          send('highlightPossibleMoves', elem, err => err && send(err))
+          return state.whosTurn() === elem.getAttribute('data-color')
         }
       }
-      state.rows.forEach(row => {
-        state.cols.forEach(col => {
-          let piece = document.querySelectorAll(`[data-position=${col}-${row}`)[0]
+      state.files.forEach(file => {
+        state.ranks.forEach(rank => {
+          let piece = document.querySelectorAll(`[data-position=${file}${rank}`)[0]
           if (piece) piece = new Draggable(piece, options)
         })
       })

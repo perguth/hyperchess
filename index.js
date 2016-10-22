@@ -1,13 +1,16 @@
 var choo = require('choo')
 var app = choo()
+var chess = require('chess')
 
 var effects = require('./choo/effects')
 var reducers = require('./choo/reducers')
 var router = require('./choo/router')
 var state = {
   board: require('./board.json'),
-  rows: [8, 7, 6, 5, 4, 3, 2, 1],
-  cols: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+  game: chess.create(),
+  files: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+  ranks: [1, 2, 3, 4, 5, 6, 7, 8],
+  whosTurn: () => 'white'
 }
 var subscriptions = require('./choo/subscriptions')(state)
 
