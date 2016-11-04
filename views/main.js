@@ -4,93 +4,71 @@ sf('../node_modules/normalize.css/normalize.css', {global: true})
 
 var boardStyle = sf`
   :host {
-    width: 360px;
-    height: 360px;
     margin: calc(50vh - 180px) auto 0;
     border: 1px solid grey;
     position: relative;
+    line-height: 0;
+    position: relative;
+    width: 360px;
+    height: 360px;
   }
 
   img.dragging {
     cursor: grabbing;
     cursor: -webkit-grabbing;
   }
-`
 
-var rowStyle = sf`
-  :host, :host ol {
+  ol {
+    list-style-type: none;
+    display: flex;
+    flex-flow: row-reverse wrap;
     margin: 0;
     padding: 0;
-    list-style-type: none;
-    text-align: center;
-    height: 45px;
+    width: 100%;
+    height: 100%;
   }
-`
-
-var colStyle = sf`
   li {
     background-color: #fecda1;
     height: 45px;
     width: 45px;
-    display: inline-block;
   }
-  li img {
-    cursor: pointer;
-    cursor: grab;
-    cursor: -webkit-grab;
-  }
-  li.dark {
+  .dark {
     background-color: #cf8b4d;
   }
-  li.highlighted {
+  .highlighted {
     background-color: yellow;
   }
-  li.highlighted.dark {
+  .highlighted.dark {
     background-color: orange;
   }
 `
 
-function movePiece (event) {
-  console.log(event)
-}
-window.movePiece = movePiece
-
-function renderFiles (rank, state) {
-  return state.files.map((file, i) => {
-    let genLi = elem => html`<li
-      data-position=${file}${rank}
-      class="${(i + (rank % 2 === 0 ? 1 : 0)) % 2 === 0 ? 'dark' : ''}">
-      ${elem}
-    </li>`
-
-    let square = state.gameState.board.squares.find(elem => {
-      return elem.file === file && elem.rank === rank
-    })
-    let piece = square.piece
-    if (!piece) return genLi()
-
-    let type = piece.type
-    let color = piece.side.name
-
-    return html`${genLi(html`<img
-      data-position=${file}${rank}
-      data-type=${type}
-      data-color=${color}
-      src=pieces/${type}-${color}.svg
-    >`)}`
-  })
+function renderPiece (square, i, state, send) {
+  let piece = square.piece
+  if (!piece) return
+  let position = square.file + square.rank
+  let type = piece.type
+  let color = piece.side.name
+  return html`<img
+    onload=${() => { console.log('test'); send('makeDraggable', position) }}
+    data-position=${position}
+    data-type=${type}
+    data-color=${color}
+    src=pieces/${type}-${color}.svg
+  >`
 }
 
 module.exports = (state, prev, send) => html`
-  <section class=${boardStyle}>
-    <ol reversed class=${rowStyle}>
-      ${state.ranks.reverse().map(rank => html`
-        <li>
-          <ol class=${colStyle}>
-            ${renderFiles(rank, state)}
-          </ol>
-        </li>
-      `)}
+  <div class=${boardStyle}>
+    <ol>
+      ${state.squares.map((square, i) => {
+        let flip = Math.floor(i / 8)
+        return html`
+          <li class="${(i + flip) % 2 !== 0 ? 'dark' : ''}">
+            ${renderPiece(square, i, state, send)}
+          </li>
+        `
+      })}
     </ol>
-  </section>
+  </div>
 `
