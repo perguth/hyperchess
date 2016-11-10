@@ -1,20 +1,29 @@
 var choo = require('choo')
 var app = choo()
-var chess = require('chess')
 
-var effects = require('./choo/effects')
-var reducers = require('./choo/reducers')
+var chess = require('chess')
+var hyperlog = require('hyperlog')
+var memdb = require('memdb')
+
+var core = {
+  log: hyperlog(memdb()),
+  lastEntry: null,
+  game: chess.create()
+}
+
 var router = require('./choo/router')
+var effects = require('./choo/effects')(core)
+var reducers = require('./choo/reducers')(core)
+var subscriptions = require('./choo/subscriptions')(core)
 var state = {
   board: require('./board.json'),
-  game: chess.create(),
-  files: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
-  ranks: [1, 2, 3, 4, 5, 6, 7, 8],
-  whosTurn: () => 'white'
+  possibleMoves: []
 }
-var subscriptions = require('./choo/subscriptions')(state)
+window.state = state
 
-app.model({state, reducers, subscriptions, effects})
+var model = { effects, reducers, subscriptions, state }
+
+app.model(model)
 app.router(router)
 
 var cooTree = app.start()

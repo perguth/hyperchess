@@ -1,10 +1,10 @@
-{
-  "a": {"1": {"type": "rook", "color": "white"}, "2": {"type": "pawn", "color": "white"}, "3": null, "4": null, "5": null, "6": null, "7": {"type": "pawn", "color": "black"}, "8": {"type": "rook", "color": "black"}},
-  "b": {"1": {"type": "knight", "color": "white"}, "2": {"type": "pawn", "color": "white"}, "3": null, "4": null, "5": null, "6": null, "7": {"type": "pawn", "color": "black"}, "8": {"type": "knight", "color": "black"}},
-  "c": {"1": {"type": "bishop", "color": "white"}, "2": {"type": "pawn", "color": "white"}, "3": null, "4": null, "5": null, "6": null, "7": {"type": "pawn", "color": "black"}, "8": {"type": "bishop", "color": "black"}},
-  "d": {"1": {"type": "queen", "color": "white"}, "2": {"type": "pawn", "color": "white"}, "3": null, "4": null, "5": null, "6": null, "7": {"type": "pawn", "color": "black"}, "8": {"type": "queen", "color": "black"}},
-  "e": {"1": {"type": "king", "color": "white"}, "2": {"type": "pawn", "color": "white"}, "3": null, "4": null, "5": null, "6": null, "7": {"type": "pawn", "color": "black"}, "8": {"type": "king", "color": "black"}},
-  "f": {"1": {"type": "bishop", "color": "white"}, "2": {"type": "pawn", "color": "white"}, "3": null, "4": null, "5": null, "6": null, "7": {"type": "pawn", "color": "black"}, "8": {"type": "bishop", "color": "black"}},
-  "g": {"1": {"type": "knight", "color": "white"}, "2": {"type": "pawn", "color": "white"}, "3": null, "4": null, "5": null, "6": null, "7": {"type": "pawn", "color": "black"}, "8": {"type": "knight", "color": "black"}},
-  "h": {"1": {"type": "rook", "color": "white"}, "2": {"type": "pawn", "color": "white"}, "3": null, "4": null, "5": null, "6": null, "7": {"type": "pawn", "color": "black"}, "8": {"type": "rook", "color": "black"}}
-}
+[
+  {"type": "rook", "color": "white"}, {"type": "pawn", "color": "white"}, null, null, null, null, {"type": "pawn", "color": "black"}, {"type": "rook", "color": "black"},
+  {"type": "knight", "color": "white"}, {"type": "pawn", "color": "white"}, null, null, null, null, {"type": "pawn", "color": "black"}, {"type": "knight", "color": "black"},
+  {"type": "bishop", "color": "white"}, {"type": "pawn", "color": "white"}, null, null, null, null, {"type": "pawn", "color": "black"}, {"type": "bishop", "color": "black"},
+  {"type": "queen", "color": "white"}, {"type": "pawn", "color": "white"}, null, null, null, null, {"type": "pawn", "color": "black"}, {"type": "queen", "color": "black"},
+  {"type": "king", "color": "white"}, {"type": "pawn", "color": "white"}, null, null, null, null, {"type": "pawn", "color": "black"}, {"type": "king", "color": "black"},
+  {"type": "bishop", "color": "white"}, {"type": "pawn", "color": "white"}, null, null, null, null, {"type": "pawn", "color": "black"}, {"type": "bishop", "color": "black"},
+  {"type": "knight", "color": "white"}, {"type": "pawn", "color": "white"}, null, null, null, null, {"type": "pawn", "color": "black"}, {"type": "knight", "color": "black"},
+  {"type": "rook", "color": "white"}, {"type": "pawn", "color": "white"}, null, null, null, null, {"type": "pawn", "color": "black"}, {"type": "rook", "color": "black"}
+]

@@ -1,3 +1,3 @@
 module.exports = route => [
-  route('/', require('../views/main.js'))
+  route('/', require('../views/board.js'))
 ]

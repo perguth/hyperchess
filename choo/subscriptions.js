@@ -1,41 +1,41 @@
-module.exports = state => [
-  function makeDraggable (send, done) {
-    document.addEventListener('DOMContentLoaded', () => {
-      let Draggable = require('draggable')
-      let previousPosition = {}
-      function keepPreviousPosition (elem) {
-        previousPosition = {left: elem.style.left, top: elem.style.top}
-      }
-      function returnToPreviousPosition (elem) {
-        elem.style.top = previousPosition.top
-        elem.style.left = previousPosition.left
-      }
+function positionMap (pos) {
+  var a = pos.charCodeAt(0) - 97
+  var b = +pos[1]
+  console.log('pos', pos, a * 8 + b - 1)
+  return a * 8 + b - 1
+}
+module.exports = core => [
+  function chess (send, done) {
+    var gameEvents = core.game.game.board
 
-      let options = {
-        grid: 45,
-        smoothDrag: true,
-        useGPU: true,
-        onDragStart: (elem, x, y, event) => {
-          keepPreviousPosition(elem)
-          let classes = elem.className + ' ' || ''
-          elem.className = classes + 'dragging'
-        },
-        onDragEnd: (elem, x, y, event) => {
-          let classes = elem.className
-          elem.className = classes.replace('dragging', '')
-          // returnToPreviousPosition(elem)
-        },
-        filterTarget: elem => {
-          send('highlightPossibleMoves', elem, err => err && send(err))
-          return state.whosTurn() === elem.getAttribute('data-color')
-        }
-      }
-      state.files.forEach(file => {
-        state.ranks.forEach(rank => {
-          let piece = document.querySelectorAll(`[data-position=${file}${rank}`)[0]
-          if (piece) piece = new Draggable(piece, options)
-        })
-      })
+    gameEvents.on('move', move => {
+      console.log('move', move)
+      var moveValid = typeof move === 'object'
+      if (!moveValid) return
+
+      let type = move.postSquare.piece.type
+      let color = move.postSquare.piece.side.name
+      let from = move.prevSquare.file + move.prevSquare.rank
+      let to = move.postSquare.file + move.postSquare.rank
+
+      send('clearSquare', positionMap(from), err => err && done(err))
+      send('setSquare', { position: positionMap(to), type, color }, err => err && done(err))
+    })
+
+    //setTimeout(() => send('makeMove', 'd4', err => err && console.log(err)), 1500)
+  },
+  function hyperlog (send, done) {
+    var hyperlogEvents = core.log.createReadStream({
+      live: true, valueEncoding: 'json'
+    })
+
+    hyperlogEvents.on('data', node => {
+      if (node.value.who !== 'me') send('makeMove', node.value, err => err && done(err))
+    })
+  },
+  function documentReady (send, done) {
+    document.addEventListener('DOMContentLoaded', () => {
+      // send('makeDraggable', 'd2', err => err && done(err))
     }, false)
   }
 ]
