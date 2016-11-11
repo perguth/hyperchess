@@ -11,7 +11,7 @@ var core = {
   game: chess.create()
 }
 
-var router = require('./choo/router')
+var router = require('./choo/router')(core)
 var effects = require('./choo/effects')(core)
 var reducers = require('./choo/reducers')(core)
 var subscriptions = require('./choo/subscriptions')(core)
