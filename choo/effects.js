@@ -1,33 +1,19 @@
 var Draggable = require('draggable')
-
-function pxToAlg (left, top, flip) {
-  var files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-  var ranks = [1, 2, 3, 4, 5, 6, 7, 8].reverse()
-  console.log('pxToAlg', left, top)
-  return files[parseInt(left, 10) / 45] + ranks[parseInt(top, 10) / 45]
-}
-function positionMap (pos) {
-  var a = pos.charCodeAt(0) - 97 + 1
-  var b = +pos[1]
-  return a * 8 + b
-}
-function algToNum (alg) {
-  var files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-  return files.indexOf(alg[0]) + +alg[1]
-}
-
-function toNotatedMove (src, dest) {
-  return dest
-}
+const convert = require('../lib/convert')
+const dragify = require('../lib/dragify')
 
 module.exports = core => ({
   makeMove: (data, state, send, done) => {
-    let notatedMove = toNotatedMove(data.src, data.dest)
+    let notatedMove = convert.toNotatedMove(data.src, data.dest, core)
     let move = core.game.move(notatedMove)
     let moveValid = typeof move === 'object'
     if (!moveValid) done('invalid')
 
     console.log('made move', move.move.algebraic)
+    setTimeout(() => {
+      // run after `bel` has rendered
+      send('renewPieceHandlers', {}, err => err && done(err))
+    }, 70)
     send('logMove', move.move.algebraic, err => err && done(err))
   },
   logMove: (data, state, send, done) => {
@@ -42,6 +28,7 @@ module.exports = core => ({
   },
   highlightPossibleMoves: (data, state, send, done) => {
     return
+    /*
     let piece = getArithemticPosition(data.style.left, data.style.top)
     let allPossibleMoves = core.game.getStatus().notatedMoves
 
@@ -52,6 +39,7 @@ module.exports = core => ({
         send('highlightSquare', dest.file + dest.rank, err => err && done(err))
       }
     }
+    */
   },
   makeDraggable: (data, state, send, done) => {
     let previousPosition = {}
@@ -96,7 +84,7 @@ module.exports = core => ({
         elem.className = classes.replace('dragging', '')
 
         let src = elem.getAttribute('data-position')
-        let dest = pxToAlg(x, y)
+        let dest = convert.pxToAlg(x, y)
         console.log(src, dest)
 
         if (!isMovePossible(src, dest)) {
@@ -128,5 +116,16 @@ module.exports = core => ({
       }
     }
     done(new Draggable(data, options)) // eslint-disable-line
+  },
+  renewPieceHandlers: (data, state, send, done) => {
+    console.log('renewPieceHandlers')
+    core.pieceHandlers.forEach(pieceHandler => {
+      pieceHandler.destroy()
+    })
+    core.pieceHandlers = []
+    let pieces = document.querySelectorAll(`img.piece`)
+    pieces.forEach(piece => {
+      core.pieceHandlers.push(dragify(piece, core, send))
+    })
   }
 })

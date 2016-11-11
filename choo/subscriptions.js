@@ -1,4 +1,5 @@
 const convert = require('../lib/convert')
+const dragify = require('../lib/dragify')
 
 module.exports = core => [
   function chess (send, done) {
@@ -11,15 +12,15 @@ module.exports = core => [
 
       let type = move.postSquare.piece.type
       let color = move.postSquare.piece.side.name
-      let from = move.prevSquare.file + move.prevSquare.rank
-      let to = move.postSquare.file + move.postSquare.rank
+      let src = move.prevSquare.file + move.prevSquare.rank
+      let dest = move.postSquare.file + move.postSquare.rank
 
-      send('clearSquare', convert.algToNum(from), err => err && done(err))
-      send('setSquare', {position: convert.algToNum(to), type, color},
+      send('clearSquare', {src}, err => err && done(err))
+      send('setSquare', {dest, type, color},
         err => err && done(err))
     })
 
-    setTimeout(() => send('makeMove', {src: 'd2', dest: 'd4'}, err => err && console.log(err)), 700)
+    // setTimeout(() => send('makeMove', {src: 'd2', dest: 'd4'}, err => err && console.log(err)), 700)
   },
   function hyperlog (send, done) {
     var hyperlogEvents = core.log.createReadStream({
@@ -35,6 +36,10 @@ module.exports = core => [
   function documentReady (send, done) {
     document.addEventListener('DOMContentLoaded', () => {
       // send('makeDraggable', 'd2', err => err && done(err))
+      let pieces = document.querySelectorAll(`img.piece`)
+      pieces.forEach(piece => {
+        core.pieceHandlers.push(dragify(piece, core, send))
+      })
     }, false)
   }
 ]

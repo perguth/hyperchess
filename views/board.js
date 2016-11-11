@@ -50,11 +50,7 @@ module.exports = core => (state, prev, send) => {
         return html`
           <div class="${flip ? 'dark' : null} ${movePossible ? 'highlighted' : null}">
             <span style="color: white;">${i}</span>
-            ${piece ? html`<img
-              onload=${elem => setTimeout(() => {
-                draggable = dragify(elem, core, send)
-              }, 70)}
-              onunload=${elem => draggable.destroy()}
+            ${piece ? html`<img class="piece"
               data-position=${convert.numToAlg(i)}
               data-type=${piece.type}
               data-color=${piece.color}

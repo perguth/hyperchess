@@ -8,7 +8,8 @@ var memdb = require('memdb')
 var core = {
   log: hyperlog(memdb()),
   lastEntry: null,
-  game: chess.create()
+  game: chess.create(),
+  pieceHandlers: []
 }
 
 var router = require('./choo/router')(core)

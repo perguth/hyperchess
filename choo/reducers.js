@@ -1,3 +1,5 @@
+const convert = require('../lib/convert')
+
 function cp (state) {
   return Object.assign({}, state)
 }
@@ -8,18 +10,19 @@ function positionMap (pos) {
 }
 
 module.exports = core => ({
-  clearSquare: (data, state) => {
+  clearSquare: (move, state) => {
+    console.log('clearSquare', move)
     state = cp(state)
-    state.board[data] = null
+    state.board[move.src] = null
     return state
   },
-  setSquare: (data, state) => {
+  setSquare: (move, state) => {
     state = cp(state)
     let piece = {
-      type: data.type,
-      color: data.color
+      type: move.type,
+      color: move.color
     }
-    state.board[data.position] = piece
+    state.board[move.dest] = piece
     return state
   },
   highlightSquare: (data, state) => {
