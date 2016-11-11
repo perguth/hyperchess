@@ -1,9 +1,5 @@
-function positionMap (pos) {
-  var a = pos.charCodeAt(0) - 97
-  var b = +pos[1]
-  console.log('pos', pos, a * 8 + b - 1)
-  return a * 8 + b - 1
-}
+const convert = require('../lib/convert')
+
 module.exports = core => [
   function chess (send, done) {
     var gameEvents = core.game.game.board
@@ -18,11 +14,12 @@ module.exports = core => [
       let from = move.prevSquare.file + move.prevSquare.rank
       let to = move.postSquare.file + move.postSquare.rank
 
-      send('clearSquare', positionMap(from), err => err && done(err))
-      send('setSquare', { position: positionMap(to), type, color }, err => err && done(err))
+      send('clearSquare', convert.algToNum(from), err => err && done(err))
+      send('setSquare', {position: convert.algToNum(to), type, color},
+        err => err && done(err))
     })
 
-    //setTimeout(() => send('makeMove', 'd4', err => err && console.log(err)), 1500)
+    setTimeout(() => send('makeMove', {src: 'd2', dest: 'd4'}, err => err && console.log(err)), 700)
   },
   function hyperlog (send, done) {
     var hyperlogEvents = core.log.createReadStream({
@@ -30,7 +27,9 @@ module.exports = core => [
     })
 
     hyperlogEvents.on('data', node => {
-      if (node.value.who !== 'me') send('makeMove', node.value, err => err && done(err))
+      if (node.value.who !== 'me') {
+        send('makeMove', node.value, err => err && done(err))
+      }
     })
   },
   function documentReady (send, done) {

@@ -16,15 +16,19 @@ function algToNum (alg) {
   return files.indexOf(alg[0]) + +alg[1]
 }
 
+function toNotatedMove (src, dest) {
+  return dest
+}
+
 module.exports = core => ({
   makeMove: (data, state, send, done) => {
-    let move = core.game.move(data)
+    let notatedMove = toNotatedMove(data.src, data.dest)
+    let move = core.game.move(notatedMove)
     let moveValid = typeof move === 'object'
     if (!moveValid) done('invalid')
 
-    console.log('make move', move)
+    console.log('made move', move.move.algebraic)
     send('logMove', move.move.algebraic, err => err && done(err))
-    done('valid')
   },
   logMove: (data, state, send, done) => {
     data = JSON.stringify({
