@@ -48,7 +48,6 @@ module.exports = core => (state, prev, send) => {
 
         return html`
           <div class="${flip ? 'dark' : null} ${highlighted ? 'highlighted' : null}">
-            <span style="color: white;">${i}</span>
             ${piece ? html`<img class="piece"
               data-position=${convert.numToAlg(i)}
               data-type=${piece.type}
