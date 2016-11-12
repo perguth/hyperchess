@@ -1,7 +1,6 @@
 const html = require('choo/html')
 const sf = require('sheetify')
 const convert = require('../lib/convert')
-const dragify = require('../lib/dragify')
 sf('../node_modules/normalize.css/normalize.css', {global: true})
 
 const boardStyle = sf`
@@ -42,13 +41,13 @@ const boardStyle = sf`
 module.exports = core => (state, prev, send) => {
   return html`
     <div class="${boardStyle}">
-      ${Object.keys(state.board).map((key, i) => {
-        let piece = state.board[key]
+      ${Object.keys(state.chessboard.board).map((key, i) => {
+        let piece = state.chessboard.board[key]
         let flip = (i + Math.floor(i / 8) % 2) % 2 === 0
-        let movePossible = state.possibleMoves.indexOf(i + 1) !== -1
-        let draggable
+        let highlighted = state.chessboard.highlighted.indexOf(convert.numToAlg(i)) !== -1
+
         return html`
-          <div class="${flip ? 'dark' : null} ${movePossible ? 'highlighted' : null}">
+          <div class="${flip ? 'dark' : null} ${highlighted ? 'highlighted' : null}">
             <span style="color: white;">${i}</span>
             ${piece ? html`<img class="piece"
               data-position=${convert.numToAlg(i)}

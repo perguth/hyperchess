@@ -13,19 +13,19 @@ var core = {
 }
 
 var router = require('./choo/router')(core)
-var effects = require('./choo/effects')(core)
-var reducers = require('./choo/reducers')(core)
-var subscriptions = require('./choo/subscriptions')(core)
+var effects = require('./choo/chessboard/effects')(core)
+var reducers = require('./choo/chessboard/reducers')(core)
+var subscriptions = require('./choo/chessboard/subscriptions')(core)
 var state = {
-  board: require('./board.json'),
-  possibleMoves: []
+  board: require('./choo/chessboard/board.json'),
+  highlighted: []
 }
 window.state = state
 
-var model = { effects, reducers, subscriptions, state }
+var model = { namespace: 'chessboard', effects, reducers, subscriptions, state }
 
 app.model(model)
-app.router(router)
+app.router('/chessboard', router)
 
-var cooTree = app.start()
+var cooTree = app.start({hash: true})
 document.body.appendChild(cooTree)
