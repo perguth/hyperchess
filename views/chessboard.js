@@ -39,12 +39,24 @@ const boardStyle = sf`
 `
 
 module.exports = core => (state, prev, send) => {
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      send('chessboard:renewPieceHandlers')
+    }, 100)
+  }, false)
+
+  if (!state.dashboard.connectionId) {
+    let connectionId = state.params.connectionId
+    send('dashboard:setConnectionId', connectionId)
+    send('dashboard:awaitPeer', connectionId)
+  }
+
   return html`
     <div class="${boardStyle}">
       ${Object.keys(state.chessboard.board).map((key, i) => {
-        let piece = state.chessboard.board[key]
-        let flip = (i + Math.floor(i / 8) % 2) % 2 === 0
-        let highlighted = state.chessboard.highlighted.indexOf(convert.numToAlg(i)) !== -1
+        const piece = state.chessboard.board[key]
+        const flip = (i + Math.floor(i / 8) % 2) % 2 === 0
+        const highlighted = state.chessboard.highlighted.indexOf(convert.numToAlg(i)) !== -1
 
         return html`
           <div class="${flip ? 'dark' : null} ${highlighted ? 'highlighted' : null}">

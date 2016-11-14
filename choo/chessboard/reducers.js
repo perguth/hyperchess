@@ -4,7 +4,6 @@ function cp (state) {
 
 module.exports = core => ({
   clearSquare: (move, state) => {
-    console.log('clearSquare', move)
     state = cp(state)
     state.board[move.src] = null
     return state
