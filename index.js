@@ -7,7 +7,6 @@ const hyperlog = require('hyperlog')
 const memdb = require('memdb')
 
 var core = {
-  url: 'localhost:9966',
   signalhubUrl: 'https://signalhub.perguth.de:65300',
   log: hyperlog(memdb()),
   lastEntry: null,
