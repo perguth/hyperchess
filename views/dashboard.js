@@ -28,7 +28,7 @@ const mainStyle = sf`
   }
   a.github::before{
     content: '';
-    background: url(../vendor/github.png) no-repeat;
+    background: url(vendor/github.png) no-repeat;
     background-size: 10px;
     display: inline-block;
     width: 12px;
