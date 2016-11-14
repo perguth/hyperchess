@@ -286,7 +286,6 @@ const hyperlog = require('hyperlog')
 const memdb = require('memdb')
 
 var core = {
-  url: 'localhost:9966',
   signalhubUrl: 'https://signalhub.perguth.de:65300',
   log: hyperlog(memdb()),
   lastEntry: null,
@@ -41974,8 +41973,9 @@ module.exports = core => (state, prev, send) => {
         <div class="input-group">
           <input type=text id=connection-id
             ${!state.dashboard.connectionId ? 'disabled' : 'readonly'}
-            value="${window.location.protocol + '//' + core.url + '/#/join/' +
-              state.dashboard.connectionId}"
+            value="${window.location.protocol + '//' +
+              window.location.hostname + ':' + window.location.port +
+              '/#/join/' + state.dashboard.connectionId}"
           >
           <span class="input-group-button">
             <button class="btn" data-clipboard-target=#connection-id>
