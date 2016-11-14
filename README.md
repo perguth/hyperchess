@@ -4,6 +4,11 @@
 
 ## Milestones
 
+### Milestone 2
+
+- [x] Play remotely
+- [x] Host on `gh-pages`
+
 ### Milestone 1
 
 - [x] Chess field
