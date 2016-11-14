@@ -59,9 +59,7 @@ module.exports = core => (state, prev, send) => {
         <div class="input-group">
           <input type=text id=connection-id
             ${!state.dashboard.connectionId ? 'disabled' : 'readonly'}
-            value="${window.location.protocol + '//' +
-              window.location.hostname + ':' + window.location.port +
-              '/#/join/' + state.dashboard.connectionId}"
+            value="${window.location.href + '#/join/' + state.dashboard.connectionId}"
           >
           <span class="input-group-button">
             <button class="btn" data-clipboard-target=#connection-id>
