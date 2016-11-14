@@ -10,6 +10,7 @@ cd ..
 cp bundle.js deploy
 cp index.html deploy
 cp -r vendor deploy
+cp -r pieces deploy
 cp -r css deploy
 
 cd deploy
