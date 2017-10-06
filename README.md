@@ -1,5 +1,7 @@
 # Hyperchess!
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/pguth/hyperchess.svg)](https://greenkeeper.io/)
+
 > Play chess peer-to-peer in your browser.
 
 ## Milestones
